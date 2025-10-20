@@ -1,26 +1,26 @@
-import React, { useState, useEffect } from "react";
-import { Routes, Route, useNavigate } from "react-router-dom";
+import React from "react";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import { Routes, Route, useNavigate } from "react-router-dom";
 
 function PlaceholderHome() {
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = React.useState("");
   const navigate = useNavigate();
 
-  useEffect(() => {
+  React.useEffect(() => {
     // Fetch backend message
     fetch("http://localhost:5000/api/test")
       .then((res) => res.json())
       .then((data) => setMessage(data.message))
       .catch((err) => console.error("❌ Error fetching:", err));
 
-    // Redirect after 2-3 seconds
+    // Redirect after 2.5 seconds
     const timer = setTimeout(() => {
       navigate("/home");
-    }, 2500); // 2.5 seconds
+    }, 2500);
 
-    return () => clearTimeout(timer); // cleanup
+    return () => clearTimeout(timer);
   }, [navigate]);
 
   return (

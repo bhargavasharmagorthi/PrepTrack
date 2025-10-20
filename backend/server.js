@@ -7,6 +7,15 @@ dotenv.config();
 
 const app = express();
 
+// --- Environment Variables ---
+const PORT = process.env.PORT || 5000;
+const MONGO_URI = process.env.MONGO_URI;
+
+if (!MONGO_URI) {
+  console.error("❌ MONGO_URI not defined in .env file!");
+  process.exit(1);
+}
+
 // --- Middleware ---
 app.use(
   cors({
@@ -14,15 +23,6 @@ app.use(
     credentials: true,
   })
 );
-
-
-const PORT = process.env.PORT || 5000;
-const MONGO_URI = process.env.MONGO_URI;
-
-if (!MONGO_URI) {
-  console.error("❌ MONGO_URI is not defined in .env file");
-  process.exit(1);
-}
 
 // --- MongoDB Connection ---
 console.log("⏳ Connecting to MongoDB...");
