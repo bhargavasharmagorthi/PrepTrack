@@ -12,6 +12,7 @@ import {
   HiDocumentText,
 } from "react-icons/hi";
 import { FaGraduationCap, FaChalkboardTeacher } from "react-icons/fa";
+import Navbar from "../components/Navbar";
 
 /**
  * PrepTrack Home Page
@@ -169,6 +170,9 @@ export default function Home() {
 
   return (
     <div className="font-sans text-slate-800 antialiased">
+      <Navbar /> {/* Fixed navbar */}
+      {/* Add top padding so content is not hidden behind navbar */}
+      <div className="pt-16">
       {/* Decorative gradient background for subtle animation */}
       <div className="absolute inset-0 -z-10 pointer-events-none">
         <div className="bg-gradient-to-tr from-white via-slate-50 to-white h-96"></div>
@@ -176,44 +180,6 @@ export default function Home() {
 
       {/* ========== HERO ========== */}
       <header className="max-w-7xl mx-auto px-6 sm:px-10 pt-10">
-        <nav className="flex items-center justify-between py-4">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-lg">
-              <HiAcademicCap className="text-white w-6 h-6" />
-            </div>
-            <span className="font-semibold text-lg text-slate-900">PrepTrack</span>
-          </div>
-
-          <div className="hidden md:flex items-center gap-6">
-            <a href="#features" className="text-slate-600 hover:text-slate-900 transition">
-              Features
-            </a>
-            <a href="#roadmap" className="text-slate-600 hover:text-slate-900 transition">
-              Roadmap
-            </a>
-            <a href="#outcomes" className="text-slate-600 hover:text-slate-900 transition">
-              Outcomes
-            </a>
-            <Link
-              to="/login"
-              className="px-4 py-2 rounded-md text-sm border border-slate-200 hover:shadow-sm"
-            >
-              Login
-            </Link>
-            <Link
-              to="/signup"
-              className="px-4 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700 transition"
-            >
-              Sign up
-            </Link>
-          </div>
-
-          <div className="md:hidden">
-            <Link to="/login" className="px-3 py-2 rounded-md bg-blue-600 text-white text-sm">
-              Login
-            </Link>
-          </div>
-        </nav>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center py-12">
           <motion.div
@@ -554,9 +520,10 @@ export default function Home() {
             <div>
               <h4 className="font-semibold mb-2">Company</h4>
               <ul className="text-sm text-slate-600 space-y-1">
-                <li><a href="/about">About</a></li>
-                <li><a href="/careers">Careers</a></li>
-                <li><a href="/contact">Contact</a></li>
+              <Link to="/about" className="text-blue-600 hover:underline">About</Link>
+              <Link to="/contact" className="text-blue-600 hover:underline">Contact</Link>
+              <Link to="/learn-more" className="text-blue-600 hover:underline">Learn More</Link>
+
               </ul>
             </div>
 
@@ -579,5 +546,6 @@ export default function Home() {
         </div>
       </footer>
     </div>
+  </div>
   );
 }
