@@ -1,3 +1,4 @@
+// frontend/src/pages/Signup.js
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../api";
@@ -18,12 +19,12 @@ export default function Signup() {
     }
     setLoading(true);
     try {
-      const res = await api.post("/auth/signup", { name, email, password });
-      localStorage.setItem("token", res.data.token);
-      navigate("/dashboard");
+      await api.post("/auth/signup", { name, email, password });
+      alert("Account created successfully! Please login to continue.");
+      navigate("/login"); // ✅ redirect to login after success
     } catch (err) {
       console.error(err.response?.data?.message || err.message);
-      alert("Signup failed! Try again.");
+      alert(err.response?.data?.message || "Signup failed! Try again.");
     } finally {
       setLoading(false);
     }
@@ -32,7 +33,9 @@ export default function Signup() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-green-100 to-green-200">
       <div className="bg-white rounded-xl shadow-lg p-10 w-full max-w-md">
-        <h2 className="text-3xl font-bold text-center text-green-700 mb-6">Create Account</h2>
+        <h2 className="text-3xl font-bold text-center text-green-700 mb-6">
+          Create Account
+        </h2>
 
         {/* Signup Form */}
         <form className="flex flex-col gap-4" onSubmit={handleSignup}>
