@@ -2,8 +2,10 @@ import React from "react";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
-import { Routes, Route, useNavigate } from "react-router-dom";
 import Landing from "./pages/Landing";
+import { Routes, Route, useNavigate } from "react-router-dom";
+import { AuthProvider } from "./context/AuthContext";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function PlaceholderHome() {
   const [message, setMessage] = React.useState("");
@@ -18,7 +20,7 @@ function PlaceholderHome() {
 
     // Redirect after 2.5 seconds
     const timer = setTimeout(() => {
-      navigate("/home");
+      navigate("/home"); // unprotected home page
     }, 2500);
 
     return () => clearTimeout(timer);
@@ -39,18 +41,27 @@ function PlaceholderHome() {
 
 function App() {
   return (
-    <Routes>
-      {/* Splash / Placeholder */}
-      <Route path="/" element={<PlaceholderHome />} />
+    <AuthProvider>
+      <Routes>
+        {/* Splash / Placeholder */}
+        <Route path="/" element={<PlaceholderHome />} />
 
-      {/* Main site */}
-      <Route path="/home" element={<Home />} />
+        {/* Main unprotected site pages */}
+        <Route path="/home" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
 
-      {/* Authentication pages */}
-      <Route path="/login" element={<Login />} />
-      <Route path="/signup" element={<Signup />} />
-      <Route path="/landing" element={<Landing />} />
-    </Routes>
+        {/* Protected Landing page */}
+        <Route
+          path="/landing"
+          element={
+            <ProtectedRoute>
+              <Landing />
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
+    </AuthProvider>
   );
 }
 

@@ -1,9 +1,10 @@
 // src/pages/Landing.js
-import React from "react";
+import React, { useContext } from "react";
 import Navbar from "../components/Navbar";
+import { AuthContext } from "../context/AuthContext";
 
 export default function Landing() {
-  const name = localStorage.getItem("name"); // stored during login
+  const { user } = useContext(AuthContext); // use user from context
 
   return (
     <div>
@@ -12,7 +13,9 @@ export default function Landing() {
 
       {/* Page content with top padding to avoid overlap with fixed Navbar */}
       <div className="pt-20 min-h-screen bg-gray-100 p-8">
-        <h1 className="text-3xl font-bold mb-4">Welcome, {name}!</h1>
+        <h1 className="text-3xl font-bold mb-4">
+          Welcome, {user?.name || "Guest"}!
+        </h1>
         <p className="mb-6">This is your landing page. Access restricted content here.</p>
 
         {/* Sample content */}
