@@ -14,14 +14,15 @@ export default function Login() {
     try {
       const res = await api.post("/auth/login", { email, password });
       localStorage.setItem("token", res.data.token);
-      navigate("/dashboard");
+      localStorage.setItem("name", res.data.name); // store name for navbar
+      navigate("/landing");
     } catch (err) {
       console.error(err.response?.data?.message || err.message);
       alert("Login failed! Check your credentials.");
     } finally {
       setLoading(false);
     }
-  };
+  };  
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-100 to-blue-200">

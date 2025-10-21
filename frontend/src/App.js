@@ -3,6 +3,7 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import { Routes, Route, useNavigate } from "react-router-dom";
+import Landing from "./pages/Landing";
 
 function PlaceholderHome() {
   const [message, setMessage] = React.useState("");
@@ -48,6 +49,7 @@ function App() {
       {/* Authentication pages */}
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
+      <Route path="/landing" element={<Landing />} />
     </Routes>
   );
 }
