@@ -1,3 +1,4 @@
+// frontend/src/App.js
 import React from "react";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
@@ -6,6 +7,7 @@ import Landing from "./pages/Landing";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
+import ForgotPassword from "./pages/ForgotPassword";
 
 function PlaceholderHome() {
   const [message, setMessage] = React.useState("");
@@ -20,7 +22,7 @@ function PlaceholderHome() {
 
     // Redirect after 2.5 seconds
     const timer = setTimeout(() => {
-      navigate("/home"); // unprotected home page
+      navigate("/home");
     }, 2500);
 
     return () => clearTimeout(timer);
@@ -33,7 +35,8 @@ function PlaceholderHome() {
         {message || "Connecting to backend..."}
       </p>
       <p className="text-gray-500 mt-2">
-        Redirecting to <span className="font-semibold text-blue-600">Home</span>...
+        Redirecting to{" "}
+        <span className="font-semibold text-blue-600">Home</span>...
       </p>
     </div>
   );
@@ -50,6 +53,7 @@ function App() {
         <Route path="/home" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
 
         {/* Protected Landing page */}
         <Route

@@ -1,44 +1,29 @@
-// backend/models/User.js
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema(
   {
+    userId: { type: String, unique: true },
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     passwordHash: { type: String, required: true },
     phone: { type: String, default: "" },
-    role: { type: String, enum: ["student", "admin"], default: "student" },
-    avatar: { type: String, default: "" },
-    class: { type: String, default: "" },
-    subscription: {
-      plan: { type: String, enum: ["free", "premium"], default: "free" },
-      startDate: { type: Date },
-      endDate: { type: Date },
-    },
+    avatar: { type: String, default: "https://i.pravatar.cc/150?img=3" },
+    class: { type: String, enum: ["10th", "11th", "12th"], default: "10th" },
+    state: { type: String, enum: ["AP", "TS"], default: "AP" },
+    city: { type: String, default: "" },
+    school: { type: String, default: "" },
     preferences: {
-      darkMode: { type: Boolean, default: false },
+      darkMode: { type: Boolean, default: true },
       notificationsEnabled: { type: Boolean, default: true },
     },
-    performanceSummary: {
-      Math: {
-        testsTaken: { type: Number, default: 0 },
-        averageScore: { type: Number, default: 0 },
-        weakTopics: [{ type: String }],
-      },
-      Physics: {
-        testsTaken: { type: Number, default: 0 },
-        averageScore: { type: Number, default: 0 },
-        weakTopics: [{ type: String }],
-      },
-      Chemistry: {
-        testsTaken: { type: Number, default: 0 },
-        averageScore: { type: Number, default: 0 },
-        weakTopics: [{ type: String }],
-      },
+    secretQuestion: { type: String, default: "" },
+    secretAnswer: { type: String, default: "" },
+    marketingOptIn: {
+      email: { type: Boolean, default: false },
+      whatsapp: { type: Boolean, default: false },
     },
   },
   { timestamps: true }
 );
 
-const User = mongoose.model("User", userSchema);
-export default User;
+export default mongoose.model("User", userSchema);

@@ -6,25 +6,31 @@ export const AuthContext = createContext();
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
 
-  // Initialize user from localStorage
+  // ✅ Initialize user from localStorage when app loads
   useEffect(() => {
     const token = localStorage.getItem("token");
     const name = localStorage.getItem("name");
-    if (token && name) {
-      setUser({ token, name });
+    const role = localStorage.getItem("role");
+    if (token && name && role) {
+      setUser({ token, name, role });
     }
   }, []);
 
-  const login = ({ token, name }) => {
+  // ✅ Login: store data in localStorage + context
+  const login = ({ token, name, role }) => {
     localStorage.setItem("token", token);
     localStorage.setItem("name", name);
-    setUser({ token, name });
+    localStorage.setItem("role", role);
+    setUser({ token, name, role });
   };
 
+  // ✅ Logout: clear everything and reset state
   const logout = () => {
     return new Promise((resolve) => {
       setUser(null);
-      localStorage.removeItem("user");
+      localStorage.removeItem("token");
+      localStorage.removeItem("name");
+      localStorage.removeItem("role");
       resolve();
     });
   };
