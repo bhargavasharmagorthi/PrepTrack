@@ -2,7 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import mongoose from "mongoose";
-import authRoutes from "./routes/auth.js";
+import authRoutes from "./routes/authRoutes.js"; // ✅ existing route file
 
 dotenv.config();
 
@@ -34,12 +34,14 @@ mongoose
   .then(() => {
     console.log("✅ MongoDB connected successfully");
 
+    // ✅ Basic test routes
     app.get("/", (req, res) => res.send("PrepTrack backend running..."));
     app.get("/api/test", (req, res) =>
       res.json({ message: "Backend connection successful!" })
     );
 
-    app.use("/auth", authRoutes); // ✅ route registered
+    // ✅ Auth routes (user, admin, agent)
+    app.use("/auth", authRoutes);
 
     app.listen(PORT, () =>
       console.log(`🚀 Server running on port ${PORT}`)

@@ -4,22 +4,22 @@ import api from "../api";
 import { AuthContext } from "../context/AuthContext";
 
 export default function Login() {
-  const [email, setEmail] = useState("");
+  const [userId, setUserId] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { login } = useContext(AuthContext); // use context
+  const { login } = useContext(AuthContext);
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await api.post("/auth/login", { email, password });
-      login({ token: res.data.token, name: res.data.name }); // update context
+      const res = await api.post("/auth/login", { userId, password });
+      login({ token: res.data.token, name: res.data.name });
       navigate("/landing");
     } catch (err) {
       console.error(err.response?.data?.message || err.message);
-      alert("Login failed! Check your credentials.");
+      alert("Login failed! Check your ID and password.");
     } finally {
       setLoading(false);
     }
@@ -32,10 +32,10 @@ export default function Login() {
 
         <form className="flex flex-col gap-4" onSubmit={handleLogin}>
           <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            type="text"
+            placeholder="Enter your User/Admin/Agent ID"
+            value={userId}
+            onChange={(e) => setUserId(e.target.value)}
             required
             className="border border-gray-300 p-3 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
@@ -57,19 +57,22 @@ export default function Login() {
           </button>
         </form>
 
-        <div className="my-6 flex items-center justify-center gap-4">
-          <hr className="w-16 border-gray-300" />
-          <span className="text-gray-500 text-sm">or login with</span>
-          <hr className="w-16 border-gray-300" />
-        </div>
-        <div className="flex justify-center gap-4">
-          <button className="bg-red-500 text-white p-3 rounded hover:bg-red-600 transition">Google</button>
-          <button className="bg-blue-800 text-white p-3 rounded hover:bg-blue-900 transition">Facebook</button>
-        </div>
+        <p className="mt-4 text-center">
+          <button
+            type="button"
+            onClick={() => navigate("/forgot-password")}
+            className="text-blue-600 font-semibold hover:underline"
+          >
+            Forgot Password?
+          </button>
+        </p>
 
         <p className="mt-6 text-center text-gray-600 text-sm">
-          Don't have an account?{" "}
-          <span onClick={() => navigate("/signup")} className="text-blue-600 font-semibold cursor-pointer hover:underline">
+          Don’t have an account?{" "}
+          <span
+            onClick={() => navigate("/signup")}
+            className="text-blue-600 font-semibold cursor-pointer hover:underline"
+          >
             Sign Up
           </span>
         </p>
