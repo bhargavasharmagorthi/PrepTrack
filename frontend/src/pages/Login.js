@@ -16,7 +16,7 @@ export default function Login() {
     try {
       const res = await api.post("/auth/login", { userId, password });
       login({ token: res.data.token, name: res.data.name });
-      navigate("/landing");
+      navigate("/app/dashboard");
     } catch (err) {
       console.error(err.response?.data?.message || err.message);
       alert("Login failed! Check your ID and password.");

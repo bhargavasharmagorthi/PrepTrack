@@ -1,27 +1,39 @@
 // src/pages/Landing.js
-import React, { useContext } from "react";
-import Navbar from "../components/Navbar";
+import React, { useContext, useState } from "react";
 import { AuthContext } from "../context/AuthContext";
+import Navbar from "../components/Navbar";
+import Sidebar from "../components/Sidebar";
+import "../styles/Landing.css"; // optional if you created styles
 
 export default function Landing() {
-  const { user } = useContext(AuthContext); // use user from context
+  const { user } = useContext(AuthContext);
+
+  const [activeTab, setActiveTab] = useState("Dashboard");
+  const [expanded, setExpanded] = useState(false); // sidebar hover
 
   return (
-    <div>
-      {/* Navbar */}
+    <div className="landing-container">
+      {/* Top Navbar */}
       <Navbar />
 
-      {/* Page content with top padding to avoid overlap with fixed Navbar */}
-      <div className="pt-20 min-h-screen bg-gray-100 p-8">
-        <h1 className="text-3xl font-bold mb-4">
-          Welcome, {user?.name || "Guest"}!
-        </h1>
-        <p className="mb-6">This is your landing page. Access restricted content here.</p>
+      <div className="layout-body">
+        {/* Sidebar */}
+        <Sidebar
+          expanded={expanded}
+          setExpanded={setExpanded}
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+        />
 
-        {/* Sample content */}
-        <div className="mt-6 p-4 bg-white shadow rounded">
-          <h2 className="text-xl font-semibold mb-2">Sample Content Section</h2>
-          <p>Here you can show dashboard content, courses, tests, etc.</p>
+        {/* Main Content Area */}
+        <div className="landing-main">
+          {user ? (
+            <h2>Welcome back, {user.name || "User"} 👋</h2>
+          ) : (
+            <h2>Welcome to PrepTrack 👋</h2>
+          )}
+
+          <p>Select a section from the sidebar to continue.</p>
         </div>
       </div>
     </div>
