@@ -8,15 +8,26 @@ import { AuthProvider, AuthContext } from "./context/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import ForgotPassword from "./pages/ForgotPassword";
 
-// 🚀 New imports for layout + pages
+// User pages + layouts
 import LandingLayout from "./layouts/LandingLayout";
-import Dashboard from "./pages/Dashboard";
-import TakeTest from "./pages/TakeTest";
-import MyTests from "./pages/MyTests";
-import Performance from "./pages/Performance";
-import Targets from "./pages/Targets";
-import Profile from "./pages/Profile";
-import Settings from "./pages/Settings";
+import Dashboard from "./pages/user/Dashboard";
+import TakeTest from "./pages/user/TakeTest";
+import MyTests from "./pages/user/MyTests";
+import Performance from "./pages/user/Performance";
+import Targets from "./pages/user/Targets";
+import Profile from "./pages/user/Profile";
+import Settings from "./pages/user/Settings";
+
+// Admin pages + layouts
+import AdminStudioLayout from "./layouts/AdminStudioLayout";
+import AdminStudio from "./pages/admin/AdminStudio";
+import Chapters from "./pages/admin/Chapters";
+import Topics from "./pages/admin/Topics";
+import QuestionBank from "./pages/admin/QuestionBank";
+import CreateTest from "./pages/admin/CreateTest";
+import TestAnalytics from "./pages/admin/TestAnalytics";
+import UserInsights from "./pages/admin/UserInsights";
+import AdminSettings from "./pages/admin/AdminSettings";
 
 function PlaceholderHome() {
   const [message, setMessage] = useState("");
@@ -24,16 +35,15 @@ function PlaceholderHome() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // (Optional) Check backend
     fetch("http://localhost:5000/api/test")
       .then((res) => res.json())
       .then((data) => setMessage(data.message))
       .catch(() => setMessage("Connecting to Backend..."));
 
-    // Auto redirect
     const timer = setTimeout(() => {
       if (user && user.token) {
-        navigate("/app/dashboard"); // NEW redirect path
+        if (user.role === "admin") navigate("/admin-studio");
+        else navigate("/app/dashboard");
       } else {
         navigate("/home");
       }
@@ -55,7 +65,8 @@ function App() {
   return (
     <AuthProvider>
       <Routes>
-        {/* Auto redirect splash */}
+        
+        {/* Splash */}
         <Route path="/" element={<PlaceholderHome />} />
 
         {/* Public pages */}
@@ -64,7 +75,7 @@ function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
 
-        {/* 🔐 PROTECTED DASHBOARD LAYOUT */}
+        {/* USER DASHBOARD */}
         <Route
           path="/app"
           element={
@@ -73,7 +84,6 @@ function App() {
             </ProtectedRoute>
           }
         >
-          {/* Nested Dashboard Routes */}
           <Route index element={<Dashboard />} />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="take-test" element={<TakeTest />} />
@@ -83,18 +93,34 @@ function App() {
           <Route path="profile" element={<Profile />} />
           <Route path="settings" element={<Settings />} />
         </Route>
+
+        {/* ⭐ ADMIN STUDIO ⭐ */}
+        <Route
+          path="/admin-studio"
+          element={
+            <ProtectedRoute requiredRole="admin">
+              <AdminStudioLayout />
+            </ProtectedRoute>
+          }
+        >
+
+          {/* Default admin dashboard */}
+          <Route index element={<AdminStudio />} />
+
+          {/* Admin Pages */}
+          <Route path="chapters" element={<Chapters />} />
+          <Route path="topics" element={<Topics />} />
+          <Route path="question-bank" element={<QuestionBank />} />
+          <Route path="create-test" element={<CreateTest />} />
+          <Route path="analytics" element={<TestAnalytics />} />
+          <Route path="user-insights" element={<UserInsights />} />
+          <Route path="settings" element={<AdminSettings />} />
+
+        </Route>
+
       </Routes>
     </AuthProvider>
   );
 }
 
 export default App;
-
-console.log("LandingLayout:", LandingLayout);
-console.log("Dashboard:", Dashboard);
-console.log("TakeTest:", TakeTest);
-console.log("MyTests:", MyTests);
-console.log("Performance:", Performance);
-console.log("Targets:", Targets);
-console.log("Profile:", Profile);
-console.log("Settings:", Settings);

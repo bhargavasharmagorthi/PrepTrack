@@ -13,10 +13,24 @@ export default function Login() {
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
+
     try {
       const res = await api.post("/auth/login", { userId, password });
-      login({ token: res.data.token, name: res.data.name });
+      console.log("LOGIN RESPONSE:", res.data);
+
+      const { token, name, role } = res.data;
+
+      // Admin Login
+      if (role === "admin") {
+        login({ token, name, role: "admin" });
+        navigate("/admin-studio");
+        return;
+      }
+
+      // Regular User Login
+      login({ token, name, role: "user" });
       navigate("/app/dashboard");
+
     } catch (err) {
       console.error(err.response?.data?.message || err.message);
       alert("Login failed! Check your ID and password.");
@@ -28,7 +42,9 @@ export default function Login() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-100 to-blue-200">
       <div className="bg-white rounded-xl shadow-lg p-10 w-full max-w-md">
-        <h2 className="text-3xl font-bold text-center text-blue-700 mb-6">Welcome Back</h2>
+        <h2 className="text-3xl font-bold text-center text-blue-700 mb-6">
+          Welcome Back
+        </h2>
 
         <form className="flex flex-col gap-4" onSubmit={handleLogin}>
           <input
@@ -39,6 +55,7 @@ export default function Login() {
             required
             className="border border-gray-300 p-3 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
+
           <input
             type="password"
             placeholder="Password"

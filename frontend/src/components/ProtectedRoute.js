@@ -1,19 +1,20 @@
 import React, { useContext } from "react";
-import { Navigate, useLocation } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 
-export default function ProtectedRoute({ children }) {
+export default function ProtectedRoute({ children, requiredRole }) {
   const { user } = useContext(AuthContext);
-  const location = useLocation();
 
-  // List of protected paths
-  const protectedPaths = ["/landing"]; // add other protected pages here
-
-  // Only redirect if user is not logged in AND trying to access a protected route
-  if (!user && protectedPaths.includes(location.pathname)) {
+  // 1) Not logged in → redirect to login
+  if (!user || !user.token) {
     return <Navigate to="/login" replace />;
   }
 
-  // User is logged in or route is not protected → render normally
+  // 2) Role-based restriction (admin/user)
+  if (requiredRole && user.role !== requiredRole) {
+    return <Navigate to="/app/dashboard" replace />;
+  }
+
+  // 3) Access granted
   return children;
 }
