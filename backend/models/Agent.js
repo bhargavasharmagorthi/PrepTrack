@@ -1,11 +1,15 @@
+// backend/models/Agent.js
 import mongoose from "mongoose";
 
 const agentSchema = new mongoose.Schema({
-  agentId: { type: String, unique: true },
+  agentId: { type: String, unique: true }, // must exist
   name: String,
   email: { type: String, unique: true },
   passwordHash: String,
-  createdAt: { type: Date, default: Date.now },
+  secretQuestion: String,
+  secretAnswer: String,
+  phone: String
 });
 
-export default mongoose.model("Agent", agentSchema);
+const Agent = mongoose.model("Agent", agentSchema);
+export default Agent;
