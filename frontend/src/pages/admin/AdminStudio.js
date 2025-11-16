@@ -76,7 +76,7 @@ export default function AdminStudio() {
           {/* QUICK ACTIONS */}
           <h2 className="text-xl font-semibold mb-3">Quick Actions</h2>
           <div className="flex flex-wrap gap-4 mb-10">
-            <button className="px-5 py-3 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700">
+            <button className="px-5 py-3 bg-red-600 text-white rounded-lg shadow hover:bg-red-700">
               + Create Chapter
             </button>
             <button className="px-5 py-3 bg-green-600 text-white rounded-lg shadow hover:bg-green-700">
@@ -85,7 +85,7 @@ export default function AdminStudio() {
             <button className="px-5 py-3 bg-yellow-600 text-white rounded-lg shadow hover:bg-yellow-700">
               + Add Questions
             </button>
-            <button className="px-5 py-3 bg-red-600 text-white rounded-lg shadow hover:bg-red-700">
+            <button className="px-5 py-3 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700">
               + Create Test
             </button>
           </div>

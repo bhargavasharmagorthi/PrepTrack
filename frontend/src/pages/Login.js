@@ -15,19 +15,26 @@ export default function Login() {
     setLoading(true);
 
     try {
+      // backend returns: token, name, role, subject (for admin)
       const res = await api.post("/auth/login", { userId, password });
       console.log("LOGIN RESPONSE:", res.data);
 
-      const { token, name, role } = res.data;
+      const { token, name, role, subject } = res.data;
 
-      // Admin Login
+      // 🚀 Admin Login
       if (role === "admin") {
-        login({ token, name, role: "admin" });
+        login({
+          token,
+          name,
+          role: "admin",
+          subject, // <= store admin subject in global state
+        });
+
         navigate("/admin-studio");
         return;
       }
 
-      // Regular User Login
+      // 🚀 Regular User Login
       login({ token, name, role: "user" });
       navigate("/app/dashboard");
 

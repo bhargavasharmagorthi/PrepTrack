@@ -1,15 +1,19 @@
-import User from "../models/User.js";
-import Admin from "../models/Admin.js";
-import Agent from "../models/Agent.js";
+import Counter from "../models/Counter.js";
+import moment from "moment";
 
-export const generateCustomId = async (prefix, Model) => {
-  const today = new Date();
-  const yyyy = today.getFullYear();
-  const mm = String(today.getMonth() + 1).padStart(2, "0");
-  const dd = String(today.getDate()).padStart(2, "0");
+export async function generateCustomId(prefix) {
+  const today = moment().format("YYYYMMDD");
 
-  const count = await Model.countDocuments();
-  const idNumber = String(count + 1).padStart(5, "0");
+  // Find and increment counter, create if it doesn't exist
+  const counter = await Counter.findOneAndUpdate(
+    { prefix, date: today },
+    { $inc: { count: 1 } },
+    { new: true, upsert: true }
+  );
 
-  return `${prefix}${yyyy}${mm}${dd}${idNumber}`;
-};
+  // Fallback if counter is somehow null
+  const count = counter?.count || 1;
+  const padded = count.toString().padStart(5, "0");
+
+  return `${prefix}${today}${padded}`;
+}

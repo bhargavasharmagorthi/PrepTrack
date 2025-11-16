@@ -1,27 +1,27 @@
+// backend/routes/authRoutes.js
 import express from "express";
-import {
-  signupUser,
-  signupAdmin,
-  signupAgent,
-  login,
-  forgotPassword,
-  verifyAnswer,
-  resetPassword,
-} from "../controllers/authController.js";
+
+// Signup controllers
+import { signupUser } from "../controllers/userController.js";
+import { signupAdmin } from "../controllers/adminController.js";
+import { signupAgent } from "../controllers/agentController.js";
+
+// Auth controllers
+import { login, forgotPassword, verifyAnswer, resetPassword } from "../controllers/authController.js";
 
 const router = express.Router();
 
-// ------------------ Signup ------------------
+// -------- SIGNUP ROUTES --------
 router.post("/signup-user", signupUser);
 router.post("/signup-admin", signupAdmin);
 router.post("/signup-agent", signupAgent);
 
-// ------------------ Login ------------------
+// -------- LOGIN ROUTES --------
 router.post("/login", login);
 
-// ------------------ Forgot / Reset Password ------------------
-router.post("/forgot-password", forgotPassword);        // Get user's security question
-router.post("/verify-answer", verifyAnswer);           // Verify answer to security question
-router.post("/reset-password", resetPassword);         // Reset password after verification
+// -------- PASSWORD RECOVERY --------
+router.post("/forgot-password", forgotPassword);
+router.post("/verify-answer", verifyAnswer);
+router.post("/reset-password", resetPassword);
 
 export default router;
