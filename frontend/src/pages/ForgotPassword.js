@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import api from "../api";
+import api from "../services/api";
 
 export default function ForgotPassword() {
   const [userId, setUserId] = useState("");
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
   const [newPassword, setNewPassword] = useState("");
-  const [showAnswer, setShowAnswer] = useState(false);
+  const [showAnswer] = useState(false);
   const navigate = useNavigate();
 
   const handleGetQuestion = async () => {

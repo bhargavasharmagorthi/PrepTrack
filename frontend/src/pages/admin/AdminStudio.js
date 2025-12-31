@@ -1,6 +1,6 @@
 // frontend/src/pages/AdminStudio.js
 import React, { useEffect, useState } from "react";
-import api from "../../api";
+import api from "../../services/api";
 
 export default function AdminStudio() {
   const [stats, setStats] = useState({
