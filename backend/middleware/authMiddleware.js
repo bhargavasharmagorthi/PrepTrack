@@ -1,5 +1,7 @@
 import jwt from "jsonwebtoken";
+import Admin from "../models/Admin.js";
 
+// -------------------- TOKEN VERIFICATION --------------------
 export const verifyToken = (req, res, next) => {
   const token = req.headers.authorization?.split(" ")[1];
 
@@ -18,7 +20,7 @@ export const verifyToken = (req, res, next) => {
   }
 };
 
-// Role-based access
+// -------------------- ROLE-BASED ACCESS --------------------
 export const authorizeRoles = (...allowedRoles) => {
   return (req, res, next) => {
     if (!req.user || !allowedRoles.includes(req.user.role)) {
@@ -26,4 +28,35 @@ export const authorizeRoles = (...allowedRoles) => {
     }
     next();
   };
+};
+
+// -------------------- ADMIN DETAILS EXTRACTION --------------------
+// Runs AFTER verifyToken, ONLY for admins
+export const attachAdminDetails = async (req, res, next) => {
+  try {
+    if (!req.user || req.user.role !== "admin") {
+      return res
+        .status(403)
+        .json({ message: "Only admins can perform this action" });
+    }
+
+    // Fetch admin from DB using ObjectId stored in token
+    const admin = await Admin.findById(req.user.id);
+
+    if (!admin) {
+      return res.status(404).json({ message: "Admin not found" });
+    }
+
+    // Attach admin details to request
+    req.admin = {
+      adminId: admin.adminId,
+      name: admin.name,
+      subject: admin.subject,
+    };
+
+    next();
+  } catch (err) {
+    console.error("attachAdminDetails Error:", err);
+    return res.status(500).json({ message: "Server error" });
+  }
 };

@@ -11,18 +11,26 @@ export function AuthProvider({ children }) {
     const token = localStorage.getItem("token");
     const name = localStorage.getItem("name");
     const role = localStorage.getItem("role");
+    const subject = localStorage.getItem("subject");
+    const adminId = localStorage.getItem("adminId");
+  
     if (token && name && role) {
-      setUser({ token, name, role });
+      setUser({ token, name, role, subject, adminId });
     }
-  }, []);
+  }, []);  
 
   // ✅ Login: store data in localStorage + context
-  const login = ({ token, name, role }) => {
+  const login = ({ token, name, role, subject, adminId }) => {
     localStorage.setItem("token", token);
     localStorage.setItem("name", name);
     localStorage.setItem("role", role);
-    setUser({ token, name, role });
+  
+    if (subject) localStorage.setItem("subject", subject);
+    if (adminId) localStorage.setItem("adminId", adminId);
+  
+    setUser({ token, name, role, subject, adminId });
   };
+  
 
   // ✅ Logout: clear everything and reset state
   const logout = () => {

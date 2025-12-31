@@ -1,6 +1,6 @@
 import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import api from "../api";
+import api from "../services/api";
 import { AuthContext } from "../context/AuthContext";
 
 export default function Login() {
@@ -15,29 +15,33 @@ export default function Login() {
     setLoading(true);
 
     try {
-      // backend returns: token, name, role, subject (for admin)
+      // Backend returns: token, name, role, subject (for admins), userId
       const res = await api.post("/auth/login", { userId, password });
       console.log("LOGIN RESPONSE:", res.data);
 
       const { token, name, role, subject } = res.data;
 
-      // 🚀 Admin Login
+      // Admin Login
       if (role === "admin") {
         login({
           token,
           name,
           role: "admin",
-          subject, // <= store admin subject in global state
+          subject, // auto passed from backend (MAT / PHY / CHE)
         });
 
         navigate("/admin-studio");
         return;
       }
 
-      // 🚀 Regular User Login
-      login({ token, name, role: "user" });
-      navigate("/app/dashboard");
+      // Normal User Login
+      login({
+        token,
+        name,
+        role: "user",
+      });
 
+      navigate("/app/dashboard");
     } catch (err) {
       console.error(err.response?.data?.message || err.message);
       alert("Login failed! Check your ID and password.");
