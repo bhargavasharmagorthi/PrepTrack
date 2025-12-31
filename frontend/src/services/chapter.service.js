@@ -4,11 +4,10 @@ const API_URL = "/api/chapters";
 
 // -------------------- GET ALL CHAPTERS --------------------
 export const getChapters = async (token) => {
-  const res = await axios.get("/api/chapters", {
+  const res = await axios.get(API_URL, {
     headers: { Authorization: `Bearer ${token}` },
+    params: { t: new Date().getTime() }, // cache-buster
   });
-
-  // ✅ ALWAYS return array
   return res.data.chapters || res.data;
 };
 
@@ -22,7 +21,7 @@ export const createChapter = async (chapterData, token) => {
 
 // -------------------- UPDATE CHAPTER --------------------
 export const updateChapter = async (chapterId, chapterData, token) => {
-  const res = await axios.put(`${API_URL}/update/${chapterId}`, chapterData, {
+  const res = await axios.put(`${API_URL}/${chapterId}`, chapterData, {
     headers: { Authorization: `Bearer ${token}` },
   });
   return res.data;
@@ -30,7 +29,7 @@ export const updateChapter = async (chapterId, chapterData, token) => {
 
 // -------------------- DELETE CHAPTER --------------------
 export const deleteChapter = async (chapterId, token) => {
-  const res = await axios.delete(`${API_URL}/delete/${chapterId}`, {
+  const res = await axios.delete(`${API_URL}/${chapterId}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
   return res.data;
