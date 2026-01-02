@@ -1,0 +1,126 @@
+// frontend/src/App.js
+import React, { useContext, useEffect, useState } from "react";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+import { Routes, Route, useNavigate } from "react-router-dom";
+import { AuthProvider, AuthContext } from "./context/AuthContext";
+import ProtectedRoute from "./components/ProtectedRoute";
+import ForgotPassword from "./pages/ForgotPassword";
+
+// User pages + layouts
+import LandingLayout from "./layouts/LandingLayout";
+import Dashboard from "./pages/user/Dashboard";
+import TakeTest from "./pages/user/TakeTest";
+import MyTests from "./pages/user/MyTests";
+import Performance from "./pages/user/Performance";
+import Targets from "./pages/user/Targets";
+import Profile from "./pages/user/Profile";
+import Settings from "./pages/user/Settings";
+
+// Admin pages + layouts
+import AdminStudioLayout from "./layouts/AdminStudioLayout";
+import AdminStudio from "./pages/admin/AdminStudio";
+import Chapters from "./pages/admin/Chapters";
+import Topics from "./pages/admin/Topics";
+import QuestionBank from "./pages/admin/QuestionBank";
+import CreateTest from "./pages/admin/CreateTest";
+import TestAnalytics from "./pages/admin/TestAnalytics";
+import UserInsights from "./pages/admin/UserInsights";
+import AdminSettings from "./pages/admin/AdminSettings";
+
+function PlaceholderHome() {
+  const [message, setMessage] = useState("");
+  const { user } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    fetch("http://localhost:5000/api/test")
+      .then((res) => res.json())
+      .then((data) => setMessage(data.message))
+      .catch(() => setMessage("Connecting to Backend..."));
+
+    const timer = setTimeout(() => {
+      if (user && user.token) {
+        if (user.role === "admin") navigate("/admin-studio");
+        else navigate("/app/dashboard");
+      } else {
+        navigate("/home");
+      }
+    }, 1500);
+
+    return () => clearTimeout(timer);
+  }, [user, navigate]);
+
+  return (
+    <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center text-center p-6">
+      <h1 className="text-5xl font-bold text-blue-600 mb-3">PrepTrack</h1>
+      <p className="text-gray-700 text-lg">{message}</p>
+      <p className="text-gray-500 mt-2">Loading...</p>
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <AuthProvider>
+      <Routes>
+        
+        {/* Splash */}
+        <Route path="/" element={<PlaceholderHome />} />
+
+        {/* Public pages */}
+        <Route path="/home" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+
+        {/* USER DASHBOARD */}
+        <Route
+          path="/app"
+          element={
+            <ProtectedRoute>
+              <LandingLayout />
+            </ProtectedRoute>
+          }
+        >
+          <Route index element={<Dashboard />} />
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="take-test" element={<TakeTest />} />
+          <Route path="my-tests" element={<MyTests />} />
+          <Route path="performance" element={<Performance />} />
+          <Route path="targets" element={<Targets />} />
+          <Route path="profile" element={<Profile />} />
+          <Route path="settings" element={<Settings />} />
+        </Route>
+
+        {/* ⭐ ADMIN STUDIO ⭐ */}
+        <Route
+          path="/admin-studio"
+          element={
+            <ProtectedRoute requiredRole="admin">
+              <AdminStudioLayout />
+            </ProtectedRoute>
+          }
+        >
+
+          {/* Default admin dashboard */}
+          <Route index element={<AdminStudio />} />
+
+          {/* Admin Pages */}
+          <Route path="chapters" element={<Chapters />} />
+          <Route path="topics" element={<Topics />} />
+          <Route path="question-bank" element={<QuestionBank />} />
+          <Route path="create-test" element={<CreateTest />} />
+          <Route path="analytics" element={<TestAnalytics />} />
+          <Route path="user-insights" element={<UserInsights />} />
+          <Route path="settings" element={<AdminSettings />} />
+
+        </Route>
+
+      </Routes>
+    </AuthProvider>
+  );
+}
+
+export default App;
