@@ -54,7 +54,7 @@ export const createChapter = async (req, res) => {
  */
 export const getAllChapters = async (req, res) => {
   try {
-    const chapters = await Chapter.find().sort({ createdAt: -1 });
+    const chapters = await Chapter.find().sort({ chapterNumber: 1 }); // ascending
     res.status(200).json(chapters);
   } catch (err) {
     console.error("Get Chapters Error:", err);
