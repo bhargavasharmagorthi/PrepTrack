@@ -4,6 +4,7 @@ import cors from "cors";
 import mongoose from "mongoose";
 
 import chapterRoutes from "./routes/chapterRoutes.js";
+import topicRoutes from "./routes/topicRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 
 dotenv.config();
@@ -24,6 +25,7 @@ app.use(express.json());
 
 // ✅ MUST be BEFORE app.listen
 app.use("/api/chapters", chapterRoutes);
+app.use("/api/topics", topicRoutes);
 app.use("/auth", authRoutes);
 
 // ---------- TEST ROUTES ----------

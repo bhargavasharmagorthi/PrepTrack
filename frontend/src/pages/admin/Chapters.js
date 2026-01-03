@@ -46,6 +46,7 @@ export default function Chapters({ user }) {
     try {
       setLoading(true);
       const data = await getChapters(localStorage.getItem("token"));
+      console.log("Fetched chapters:", data);
       const sorted = Array.isArray(data)
         ? data.sort((a, b) => Number(a.chapterNumber) - Number(b.chapterNumber))
         : [];
@@ -324,9 +325,9 @@ export default function Chapters({ user }) {
             }}
             className="border rounded px-2 py-1"
           >
-            <option value={10}>10</option>
-            <option value={20}>20</option>
-            <option value={30}>30</option>
+            <option value={3}>3</option>
+            <option value={6}>6</option>
+            <option value={9}>9</option>
           </select>
         </div>
         <div className="flex items-center gap-2">
@@ -350,6 +351,58 @@ export default function Chapters({ user }) {
         </div>
       </div>
 
+      {/* ---------------- CARD VIEW ---------------- */}
+<div className="space-y-8 mt-6">
+  {["MAT", "PHY", "CHE"].map((subject) => {
+    const subjectChapters = filteredChapters.filter((c) => c.subject === subject);
+    if (!subjectChapters.length) return null;
+
+    return (
+      <div key={subject}>
+        {/* Subject Section Header */}
+        <h2 className="text-xl font-bold mb-4">
+          {subject === "MAT" ? "Mathematics" : subject === "PHY" ? "Physics" : "Chemistry"}
+        </h2>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {subjectChapters.map((c) => {
+            const SUBJECT_BG = {
+              MAT: "bg-blue-900 text-white",
+              PHY: "bg-emerald-800 text-white",
+              CHE: "bg-orange-800 text-white",
+            };
+
+            return (
+              <div key={c._id} className="bg-white rounded-lg shadow-lg border overflow-hidden h-64 flex flex-col">
+                
+                {/* Header: Chapter Number + Name (Sticky) */}
+                <div
+                  className={`p-4 font-bold text-lg border-b ${SUBJECT_BG[c.subject] || "bg-gray-100"}`}
+                >
+                  {c.chapterNumber}. {c.chapterName}
+                </div>
+
+                {/* Scrollable Content */}
+                <div className="p-4 flex-1 overflow-auto text-sm space-y-2">
+                  <p><strong>Subject:</strong> {c.subject}</p>
+                  <p><strong>Difficulty:</strong> {c.difficulty}</p>
+                  <p><strong>Description:</strong> {c.description || "-"}</p>
+                  <p><strong>JEE Main:</strong> {c.jeeMainWeightage?.min}–{c.jeeMainWeightage?.max}%</p>
+                  <p><strong>JEE Adv:</strong> {c.jeeAdvancedWeightage?.min}–{c.jeeAdvancedWeightage?.max}%</p>
+                  <p><strong>Prerequisites:</strong> {c.prerequisites?.join(", ") || "-"}</p>
+                  <p className="text-xs mt-2"><strong>Created:</strong> {new Date(c.createdAt).toLocaleDateString()}</p>
+                </div>
+                
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  })}
+</div>
+
+
       {/* Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center">
@@ -357,6 +410,7 @@ export default function Chapters({ user }) {
             <h3 className="text-xl font-bold">{editingChapter ? "Edit Chapter" : "Create Chapter"}</h3>
             {/* Form grid same as original */}
             <div className="grid grid-cols-2 gap-4">
+              {/* ...existing form fields unchanged... */}
               <div>
                 <label>Chapter Number</label>
                 <input

@@ -31,7 +31,6 @@ export const authorizeRoles = (...allowedRoles) => {
 };
 
 // -------------------- ADMIN DETAILS EXTRACTION --------------------
-// Runs AFTER verifyToken, ONLY for admins
 export const attachAdminDetails = async (req, res, next) => {
   try {
     if (!req.user || req.user.role !== "admin") {
@@ -40,14 +39,12 @@ export const attachAdminDetails = async (req, res, next) => {
         .json({ message: "Only admins can perform this action" });
     }
 
-    // Fetch admin from DB using ObjectId stored in token
     const admin = await Admin.findById(req.user.id);
 
     if (!admin) {
       return res.status(404).json({ message: "Admin not found" });
     }
 
-    // Attach admin details to request
     req.admin = {
       adminId: admin.adminId,
       name: admin.name,
@@ -60,3 +57,6 @@ export const attachAdminDetails = async (req, res, next) => {
     return res.status(500).json({ message: "Server error" });
   }
 };
+
+// ✅ BACKWARD-COMPATIBLE DEFAULT EXPORT
+export default verifyToken;
