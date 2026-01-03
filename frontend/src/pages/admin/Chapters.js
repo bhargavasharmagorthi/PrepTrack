@@ -366,18 +366,19 @@ export default function Chapters({ user }) {
 
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {subjectChapters.map((c) => {
-            const bgFront =
-              c.subject === "MAT"
-                ? "bg-blue-100"
-                : c.subject === "PHY"
-                ? "bg-green-100"
-                : "bg-yellow-100";
+            const SUBJECT_BG = {
+              MAT: "bg-blue-900 text-white",
+              PHY: "bg-emerald-800 text-white",
+              CHE: "bg-orange-800 text-white",
+            };
 
             return (
-              <div key={c._id} className={`bg-white rounded-lg shadow-lg border ${bgFront} overflow-hidden h-64 flex flex-col`}>
+              <div key={c._id} className="bg-white rounded-lg shadow-lg border overflow-hidden h-64 flex flex-col">
                 
                 {/* Header: Chapter Number + Name (Sticky) */}
-                <div className="p-4 font-bold text-lg border-b bg-opacity-90">
+                <div
+                  className={`p-4 font-bold text-lg border-b ${SUBJECT_BG[c.subject] || "bg-gray-100"}`}
+                >
                   {c.chapterNumber}. {c.chapterName}
                 </div>
 

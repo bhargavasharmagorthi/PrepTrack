@@ -21,6 +21,14 @@ export default function Topics({ user }) {
 
   const [showModal, setShowModal] = useState(false);
   const [editingTopic, setEditingTopic] = useState(null);
+  const chapterMap = React.useMemo(() => {
+    const map = {};
+    chapters.forEach((c) => {
+      map[c._id] = c;
+    });
+    return map;
+  }, [chapters]);
+  
 
   // ---------------- FILTER STATE ----------------
   const [searchFilters, setSearchFilters] = useState({
@@ -93,7 +101,9 @@ export default function Topics({ user }) {
       filtered = filtered.filter((t) => t.subject === searchFilters.subject);
     }
     if (searchFilters.chapterId) {
-      filtered = filtered.filter((t) => t.chapterId === searchFilters.chapterId);
+      filtered = filtered.filter(
+        (t) => t.chapter === searchFilters.chapterId
+      );
     }
     if (searchFilters.difficulty) {
       filtered = filtered.filter((t) => t.difficulty === searchFilters.difficulty);
@@ -339,7 +349,7 @@ export default function Topics({ user }) {
                 <tr key={t._id} className="hover:bg-gray-50">
                   <td className="border px-3 py-2">{t.topicNumber || idx + 1}</td>
                   <td className="border px-3 py-2">{t.subject}</td>
-                  <td className="border px-3 py-2">{t.chapterName || "-"}</td>
+                  <td className="border px-3 py-2">{chapterMap[t.chapter]?.chapterName || "-"}</td>
                   <td className="border px-3 py-2 font-semibold">{t.topicName}</td>
                   <td className="border px-3 py-2">{t.difficulty}</td>
                   <td className="border px-3 py-2">
@@ -409,6 +419,92 @@ export default function Topics({ user }) {
           </button>
         </div>
       </div>
+{/* ---------------- CARD VIEW ---------------- */}
+<div className="space-y-8 mt-8">
+  {["MAT", "PHY", "CHE"].map((subject) => {
+    const subjectTopics = filteredTopics.filter(
+      (t) => t.subject === subject
+    );
+    if (!subjectTopics.length) return null;
+
+    const SUBJECT_BG = {
+      MAT: "bg-blue-900 text-white",
+      PHY: "bg-emerald-800 text-white",
+      CHE: "bg-orange-800 text-white",
+    };
+
+    return (
+      <div key={subject}>
+        {/* Subject Header */}
+        <h2 className="text-xl font-bold mb-4">
+          {subject === "MAT"
+            ? "Mathematics"
+            : subject === "PHY"
+            ? "Physics"
+            : "Chemistry"}
+        </h2>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {subjectTopics.map((t) => (
+            <div
+              key={t._id}
+              className="bg-white rounded-lg shadow-lg border overflow-hidden h-64 flex flex-col"
+            >
+              {/* Header */}
+              <div
+                className={`p-4 font-bold text-lg border-b ${
+                  SUBJECT_BG[t.subject]
+                }`}
+              >
+                {t.topicNumber || "-"} . {t.topicName}
+              </div>
+
+              {/* Scrollable Content */}
+              <div className="p-4 flex-1 overflow-auto text-sm space-y-2">
+                <p>
+                <strong>Chapter:</strong>{" "}
+                {chapterMap[t.chapter]?.chapterName || "—"}
+                </p>
+                <p>
+                  <strong>Difficulty:</strong> {t.difficulty}
+                </p>
+                <p>
+                  <strong>Description:</strong>{" "}
+                  {t.description || "—"}
+                </p>
+                <p>
+                  <strong>Subtopics:</strong>{" "}
+                  {t.subtopics?.length
+                    ? t.subtopics.map((s) => s.title).join(", ")
+                    : "—"}
+                </p>
+
+                <p className="text-xs pt-2">
+                  <strong>Created:</strong>{" "}
+                  {t.createdAt
+                    ? new Date(t.createdAt).toLocaleDateString()
+                    : "—"}
+                </p>
+              </div>
+
+              {/* Actions */}
+              <div className="border-t p-2 flex justify-end gap-3">
+                <FiEdit
+                  className="cursor-pointer text-blue-600"
+                  onClick={() => openModal(t)}
+                />
+                <FiTrash2
+                  className="cursor-pointer text-red-600"
+                  onClick={() => handleDelete(t._id)}
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  })}
+</div>
 
       {/* Modal */}
       {showModal && (
